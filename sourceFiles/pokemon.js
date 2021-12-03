@@ -9,6 +9,7 @@ function Pokemon(pokemonParameters = null) {
     this.weakness = pokemonParameters["weakness"];
     this.sound = pokemonParameters["sound"];
     this.defend = false;
+    this.defeated = false;
   }
 }
 
@@ -20,6 +21,7 @@ Pokemon.prototype.useYourMoves = function () {
   return this.move;
 };
 
+//for testing purposes when pokemon parameters are null
 Pokemon.prototype.propertyValues = function () {
   let returnObj = [
     this.name,
@@ -30,6 +32,7 @@ Pokemon.prototype.propertyValues = function () {
     this.strength,
     this.weakness,
     this.sound,
+    this.defeated
   ];
   return returnObj;
 };

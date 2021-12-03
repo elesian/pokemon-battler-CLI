@@ -7,7 +7,10 @@ const {
 function Trainer(inputName = "Ash") {
   this.name = inputName;
   this.pokemonInventory = [];
-  this.currentPokemon = {};
+  this.pokemonInventoryMaxSize = 6;
+  this.currentPokemon = null; 
+  this.defeated = false;
+  
 }
 
 Trainer.prototype.trainerInitialisation = function () {
@@ -20,37 +23,38 @@ Trainer.prototype.trainerInitialisation = function () {
 Trainer.prototype.pokemonInformation = function () {
   let printCurrentNames = "Your Inventory of Pokemon are: \n\n";
   for (let i = 0; i < this.pokemonInventory.length; i++) {
-    printCurrentNames += (i+1) + ". " + this.pokemonInventory[i].name + " " + "\n"
+    printCurrentNames += (i) + ". " + this.pokemonInventory[i].name + " " + "\n"
   }
   console.log(printCurrentNames);
 };
 
-Trainer.prototype.selectCurrentPokemon = function () {
+Trainer.prototype.selectCurrentPokemon = function (selection=0) {
   this.pokemonInformation();
   //get userinput
   console.log(
     "Please select the number of the Pokemon you wish to change to : "
   );
-  //hardcoded - error checking for user input
-  const hardcodedInput = 0;
-  this.currentPokemon[hardcodedInput] =
-    this.pokemonInventory[hardcodedInput].name;
-    let currentNumber = parseInt(Object.keys(this.currentPokemon));
-    let currentPokemon = Object.values(this.currentPokemon);
-    console.log(++currentNumber + " : " + currentPokemon);
+  console.log(`You have selected: ${selection}`);
+  //reset current pokemon
+  if(selection >= 0 && selection <= this.pokemonInventoryMaxSize){
+    this.currentPokemon = selection;
+    let currentPokemon = Object.values(this.pokemonInventory[4])[0];
+    return `Your current Pokemon is slot ${selection} : ${currentPokemon}`;
+  } else return "Invalid Selection";
  };
 
-Trainer.prototype.removePokemon = function () {
-  const hardcodedInput = 0;
-  if (this.pokemonInventory.length > 1) {
+Trainer.prototype.removePokemon = function (selection=0) {
+  if(this.pokemonInventory.length > 1) {
+    console.log("before");
     this.pokemonInformation();
-    this.pokemonInventory.splice(hardcodedInput, 1);
-    console.log(this.pokemonInventory);
-  }
-  if(hardcodedInput==this.currentPokemon){
-      this.selectCurrentPokemon();
-  }
+    this.pokemonInventory.splice((selection), 1);
+    console.log("after");
+    this.pokemonInformation();}
+    else console.log("You must have at least one Pokemon");
+    
 };
+
+//catch pokemon to maximal size
 
 //pokemon defend change pokemon status
 //pokemon catch - new random pokemon call
