@@ -65,7 +65,7 @@ pokemonData.flareonObj = {
 };
 
 pokemonData.vaporeonObj = {
-  name: "Eevee",
+  name: "Vaporeon",
   type: "water",
   hitPoints: 70,
   move: "hydro pump",
