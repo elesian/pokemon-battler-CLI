@@ -43,6 +43,7 @@ function randomizePokemon(pokemonDatabase) {
   return pokemonDatabase[pokemonKeys[randomNumber]];
 }
 
+//used to pass parameters to Pokemon class
 const pokemonData = {};
 pokemonData.eeveeObj = {
   name: "Eevee",

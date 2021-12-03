@@ -60,7 +60,7 @@ describe("Test suite for creating Pokemon", () => {
     expect(eeveePokemon.talk()).toEqual("Eev...Eevee!");
     expect(squirtlePokemon.talk()).toEqual("Squ... Squirtle!");
   });
-  test("Is correct Pokemon move returned?", () => {
+  test.only("Is correct Pokemon move returned?", () => {
     //arrange
     const eeveeData = pokemonData["eeveeObj"];
     const eeveePokemon = new Pokemon(eeveeData);

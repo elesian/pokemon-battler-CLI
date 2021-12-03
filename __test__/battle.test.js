@@ -7,8 +7,34 @@ const {
 } = require("../sourceFiles/pokemon.js");
 
 const { Battle } = require("../sourceFiles/battle.js");
-const { describe } = require("@jest/globals");
+const { describe, expect } = require("@jest/globals");
 
 describe("Test suite for Battle", () => {
-  test("should ", () => {});
+  test("Battle accepts two trainers", () => {
+    const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+  });
+  test("Randomisation Function returns true ~50% of the time", () => {
+    //arrange
+    let zero = 0;
+    let one = 0;
+    //act
+    testBattle = new Battle();
+    for (let i = 0; i <= 1000; i++) {
+      if (testBattle.numberRandomiser() === true) {
+        one++;
+      } else zero++;
+    }
+    //assert
+    console.log((zero/1000)*100 + " %");
+  });
+    test('optionSelect should give a list of actions to the player ', () => {
+        
+
+        
+    });
+
 });
