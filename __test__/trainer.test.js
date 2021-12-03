@@ -129,7 +129,7 @@ describe("Test suite for Trainer", () => {
     const inventoryFull = testTrainer.catchPokemon();
     expect(inventoryFull).toEqual(false);
   });
-  test.only("It is possible to catch a Pokemon if Inventory is not full", () => {
+  test("It is possible to catch a Pokemon if Inventory is not full", () => {
     //arrange
     const testTrainer = new Trainer();
     //act
@@ -138,8 +138,9 @@ describe("Test suite for Trainer", () => {
     testTrainer.removePokemon();
     expect(testTrainer.pokemonInventory.length).toEqual(4);
     testTrainer.catchPokemon();
-    testTrainer.catchPokemon();
+    const catchAttempt = testTrainer.catchPokemon();
     expect(testTrainer.pokemonInventory.length).toBeGreaterThanOrEqual(4);
+    expect(catchAttempt).toEqual(true);
   });
   test("If Pokemon is defeated, remove from inventory", () => {
     //arrange

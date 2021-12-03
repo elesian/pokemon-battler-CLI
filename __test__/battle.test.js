@@ -29,12 +29,12 @@ describe("Test suite for Battle", () => {
       } else zero++;
     }
     //assert
-    console.log((zero/1000)*100 + " %");
+    console.log((zero/1000)*100 + " %"); //returns ~50%
   });
     test('optionSelect should give a list of actions to the player ', () => {
-        
-
-        
+        testBattle = new Battle();
+        //act 
+        testBattle.optionSelect();
     });
 
 });

@@ -12,6 +12,8 @@ function Battle(trainer1, trainer2) {
         this.endGame = false;
         this.player1 = trainer1;
         this.player2 = trainer2;
+        this.winner = false;
+        
 
 }
 
@@ -19,7 +21,7 @@ Battle.prototype.gameLoop = function(){
 
     while(this.endGame==false){
 
-
+        
 
     }
 
@@ -34,18 +36,42 @@ Battle.prototype.numberRandomiser = function () {
     else return false;
   }
 
-  Battle.prototype.optionSelect = function () {
-      console.log("Please choose an action: \n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon");
+  //selection variable for testing purposes; to be overriden with UI
+  Battle.prototype.optionSelect = function (selection) {
+      console.log("Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon ");
     
   }
 
   Battle.prototype.attack = function () {
 
+        //take attack damage * crit chance * weakness * defense flag
+        //You are attacking with current pokemon with attack for X damage
+        //If attacking pokemons type == weakness, it's super effective!
+        //If attacking pokemons type == strength, it's not very effective!
+        //pokemon is defending resists your attack!
+        //if pokemon hp <=0, then remove current Pokemon
+        //if playerdefeated = true, break, change flag;
+  }
+
+  Battle.prototype.defend = function () {
+
 
   }
 
+ Battle.prototype.switchPokemon = function () {
 
 
+}
+
+Battle.prototype.catchPokemon = function () {
+
+
+}
+
+Battle.prototype.removePokemon = function () {
+
+
+}
 
 
 module.exports = { Battle };

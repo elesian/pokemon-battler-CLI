@@ -10,6 +10,7 @@ function Trainer(inputName = "Ash") {
   this.pokemonInventory = [];
   this.pokemonInventoryMaxSize = 6;
   this.currentPokemon = null;
+  this.defendStatus = false;
   this.playerDefeated = false;
 }
 
@@ -86,7 +87,7 @@ Trainer.prototype.catchPokemon = function () {
       console.log("Pokemon caught successfully !!!");
       return true;
     } else console.log("Pokemon escaped capture !!!");
-    return false;
+    return true;
   } else console.log("Inventory Full. Unable to catch new Pokemon.");
   return false;
 };
