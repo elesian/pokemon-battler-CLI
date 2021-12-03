@@ -1,5 +1,4 @@
 const { expect } = require("@jest/globals");
-const { TestWatcher } = require("jest");
 const {
   Pokemon,
   pokemonData,
@@ -198,6 +197,5 @@ describe("Test suite for Trainer", () => {
     //player is now defeated.
     testTrainer.pokemonDefeated();
     expect(testTrainer.playerDefeated).toEqual(true);
-
   });
 });

@@ -1,4 +1,3 @@
-const { threadId } = require("worker_threads");
 const {
   Pokemon,
   pokemonData,
@@ -45,6 +44,7 @@ Trainer.prototype.selectCurrentPokemon = function (selection = 0) {
   } else return "Invalid Selection";
 };
 
+//selection set to 0 for testing purposes
 Trainer.prototype.removePokemon = function (selection = 0) {
   if (this.pokemonInventory.length > 1) {
     console.log("before");
@@ -63,8 +63,6 @@ Trainer.prototype.removePokemon = function (selection = 0) {
     }
   } else console.log("You must have at least one Pokemon");
 };
-
-//catch pokemon to maximal size
 
 Trainer.prototype.catchPokemon = function () {
   if (this.pokemonInventory.length < this.pokemonInventoryMaxSize) {
