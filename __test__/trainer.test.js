@@ -1,4 +1,5 @@
 const { expect } = require("@jest/globals");
+const { TestWatcher } = require("jest");
 const {
   Pokemon,
   pokemonData,
@@ -37,7 +38,7 @@ describe("Test suite for Trainer", () => {
     expect(testTrainer.pokemonInventory).toEqual([]);
     expect(testTrainer.currentPokemon).toEqual(null);
   });
-  
+
   test("Trainer intialisation results in an inventory of six pokemon", () => {
     //arrange
     const testTrainer = new Trainer();
@@ -57,7 +58,11 @@ describe("Test suite for Trainer", () => {
     const selectionReturnTwo = testTrainerTwo.selectCurrentPokemon(7);
 
     //assert
-    expect(selectionReturnOne).toEqual(`Your current Pokemon is slot 3 : ${Object.values(testTrainerOne.pokemonInventory[4])[0]}`);
+    expect(selectionReturnOne).toEqual(
+      `Your current Pokemon is slot 3 : ${
+        Object.values(testTrainerOne.pokemonInventory[3])[0]
+      }`
+    );
     expect(selectionReturnTwo).toEqual("Invalid Selection");
   });
   test("Trainer initialisation also requires initial Pokemon selection", () => {
@@ -88,12 +93,111 @@ describe("Test suite for Trainer", () => {
     }
     expect(testTrainer.pokemonInventory.length).toEqual(1);
   });
-  test('If current pokemon is removed, call selection and select new Pokemon', () => {
-      //arrange
+  test("If current pokemon is removed, invoke selectCurrentPokemon() and select new Pokemon", () => {
+    //arrange
     const testTrainer = new Trainer();
     //act
     testTrainer.trainerInitialisation();
-    testTrainer.removePokemon(); 
+    testTrainer.selectCurrentPokemon(3);
+    //test case that current Pokemon is removed
+    testTrainer.removePokemon(3);
+    //assert
+    expect(testTrainer.pokemonInventory.length).toEqual(5);
+    expect(testTrainer.currentPokemon).toEqual(0);
   });
+  test("If slot greater than current Pokemon is removed, current Pokemon index should remain the same ", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    testTrainer.selectCurrentPokemon(3);
+    //test case that current Pokemon is removed
+    testTrainer.removePokemon(4);
+    expect(testTrainer.pokemonInventory.length).toEqual(5);
+    expect(testTrainer.currentPokemon).toEqual(3);
+  });
+  test("If slot less than current Pokemon is removed, current Pokemon index should decrease by one", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    testTrainer.selectCurrentPokemon(3);
+    //test case that current Pokemon is removed
+    testTrainer.removePokemon(2);
+    expect(testTrainer.pokemonInventory.length).toEqual(5);
+    expect(testTrainer.currentPokemon).toEqual(2);
+  });
+  test("It is not possible to catch a Pokemon if Inventory is at limit", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    const inventoryFull = testTrainer.catchPokemon();
+    expect(inventoryFull).toEqual(
+      "Inventory Full. Unable to catch new Pokemon"
+    );
+  });
+  test("It is possible to catch a Pokemon if Inventory is at limit", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    testTrainer.removePokemon();
+    testTrainer.removePokemon();
+    testTrainer.catchPokemon();
+    testTrainer.catchPokemon();
+    expect(testTrainer.pokemonInventory.length).toEqual(6);
+    let inventoryFull = testTrainer.catchPokemon();
+    expect(testTrainer.pokemonInventory.length).toEqual(6);
+    expect(inventoryFull).toEqual(
+      "Inventory Full. Unable to catch new Pokemon"
+    );
+  });
+  test("If Pokemon is defeated, remove from inventory", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    testTrainer.pokemonDefeated();
+    testTrainer.pokemonDefeated();
+    expect(testTrainer.pokemonInventory.length).toEqual(4);
+  });
+  test("If Pokemon is defeated, should call selectCurrentPokemon", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    testTrainer.pokemonDefeated();
+    testTrainer.pokemonDefeated();
+    expect(testTrainer.pokemonInventory.length).toEqual(4);
+    expect(testTrainer.currentPokemon).toEqual(0);
+  });
+  test("If Pokemon is defeated, pokemonInventoryMaxSize is decreased by one", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    testTrainer.pokemonDefeated();
+    testTrainer.pokemonDefeated();
+    expect(testTrainer.pokemonInventory.length).toEqual(4);
+    expect(testTrainer.pokemonInventoryMaxSize).toEqual(4);
+  });
+  test.only("If ALL Pokemon are defeated, status of player is defeated", () => {
+    //arrange
+    const testTrainer = new Trainer();
+    //act
+    testTrainer.trainerInitialisation();
+    testTrainer.pokemonDefeated();
+    testTrainer.pokemonDefeated();
+    testTrainer.pokemonDefeated();
+    testTrainer.pokemonDefeated();
+    testTrainer.pokemonDefeated();
+    expect(testTrainer.pokemonInventory.length).toEqual(1);
+    expect(testTrainer.currentPokemon).toEqual(0);
+    expect(testTrainer.playerDefeated).toEqual(false);
+    //player is now defeated.
+    testTrainer.pokemonDefeated();
+    expect(testTrainer.playerDefeated).toEqual(true);
 
+  });
 });

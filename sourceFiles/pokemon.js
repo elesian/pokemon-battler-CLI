@@ -9,7 +9,6 @@ function Pokemon(pokemonParameters = null) {
     this.weakness = pokemonParameters["weakness"];
     this.sound = pokemonParameters["sound"];
     this.defend = false;
-    this.defeated = false;
   }
 }
 
