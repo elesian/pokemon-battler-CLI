@@ -15,9 +15,9 @@ describe("Test suite for Battle", () => {
     trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
     testBattle = new Battle(trainer1);
-		expect(testBattle.player1).not.toEqual(null);
-		expect(testBattle.player2).not.toEqual(null);
-	});
+    expect(testBattle.player1).not.toEqual(null);
+    expect(testBattle.player2).not.toEqual(null);
+  });
   test("Randomisation Function returns true ~50% of the time", () => {
     //arrange
     let zero = 0;
@@ -88,80 +88,152 @@ describe("Test suite for Battle", () => {
     expect(testBattle.player1.defendStatus).toEqual(true);
     expect(testBattle.player2.defendStatus).toEqual(false);
   });
-	test("PlayerTurn() should return false if player is not defeated", () => {
+  test("PlayerTurn() should return false if player is not defeated", () => {
     const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
     trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
     testBattle = new Battle(trainer1, trainer2);
-		expect(testBattle.playerTurn(trainer1, trainer2)).toEqual(false);
+    expect(testBattle.playerTurn(trainer1, trainer2)).toEqual(false);
   });
-	test("PlayerTurn() should invoke defend() if optionSelect(2) is invoked within the function", () => {
+  test("PlayerTurn() should invoke defend() if optionSelect(2) is invoked within the function", () => {
     //arrange
-		const trainer1 = new Trainer("Ash");
+    const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
-		trainer1.trainerInitialisation();
+    trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
     testBattle = new Battle(trainer1, trainer2);
 
-		//act
-		spyOptionSelect = jest.spyOn(testBattle, 'optionSelect');
-		spyDefend = jest.spyOn(testBattle, 'defend');
-		testBattle.playerTurn(trainer1, trainer2, 2);
-  
-		//assert
-		expect(testBattle.player1.defendStatus).toEqual(true);
-		expect(testBattle.player2.defendStatus).toEqual(false);
-		expect(spyOptionSelect).toHaveBeenCalledTimes(1);
-		expect(spyDefend).toHaveBeenCalledTimes(1);
-		
+    //act
+    spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyDefend = jest.spyOn(testBattle, "defend");
+    testBattle.playerTurn(trainer1, trainer2, 2);
 
+    //assert
+    expect(testBattle.player1.defendStatus).toEqual(true);
+    expect(testBattle.player2.defendStatus).toEqual(false);
+    expect(spyOptionSelect).toHaveBeenCalledTimes(1);
+    expect(spyDefend).toHaveBeenCalledTimes(1);
   });
-	test("PlayerTurn() should invoke switchPokemon() if optionSelect(3) is invoked within the function", () => {
+  test("PlayerTurn() should invoke switchPokemon() if optionSelect(3) is invoked within the function", () => {
     //arrange
-		const trainer1 = new Trainer("Ash");
+    const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
-		trainer1.trainerInitialisation();
+    trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
     testBattle = new Battle(trainer1, trainer2);
 
-		//act
-		spyOptionSelect = jest.spyOn(testBattle, 'optionSelect');
-		spySelectPokemom = jest.spyOn(testBattle.player1, 'selectCurrentPokemon');
-		spyDefend = jest.spyOn(testBattle, 'defend');
-		
-		spyOptionSelect.mockReturnValueOnce(3).mockReturnValueOnce(2);
-		spySelectPokemom.mockReturnValueOnce(false).mockReturnValueOnce(true);
+    //act
+    spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spySelectPokemom = jest.spyOn(testBattle.player1, "selectCurrentPokemon");
+    spyDefend = jest.spyOn(testBattle, "defend");
 
-		testBattle.playerTurn(trainer1, trainer2);
-		//assert
-		expect(spySelectPokemom).toHaveBeenCalledTimes(2);
-		expect(spyOptionSelect).toHaveBeenCalledTimes(2);
-		expect(spyDefend).toHaveBeenCalledTimes(1);
-		expect(testBattle.player1.currentPokemon).toEqual(0);
+    spyOptionSelect.mockReturnValueOnce(3).mockReturnValueOnce(2);
+    spySelectPokemom.mockReturnValueOnce(false).mockReturnValueOnce(true);
+
+    testBattle.playerTurn(trainer1, trainer2);
+    //assert
+    expect(spySelectPokemom).toHaveBeenCalledTimes(1);
+    expect(spyOptionSelect).toHaveBeenCalledTimes(2);
+    expect(spyDefend).toHaveBeenCalledTimes(1);
+    expect(testBattle.player1.currentPokemon).toEqual(0);
+  });
+  test("PlayerTurn() should invoke catchPokemon() if optionSelect(4) is invoked within the function", () => {
+    //arrange
+    const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+
+    spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyCatchPokemon = jest.spyOn(testBattle.player1, "catchPokemon");
+
+    spyOptionSelect.mockReturnValueOnce(4);
+    spyCatchPokemon
+      .mockReturnValueOnce(true);
+    //act
+    testBattle.playerTurn(trainer1, trainer2);
+
+    //assert
+    expect(spyOptionSelect).toHaveBeenCalledTimes(1);
+    expect(spyCatchPokemon).toHaveBeenCalledTimes(1);
+  });
+  test("If PlayerTurn() invokes catchPokemon() and inventory is full, player can reselect from menu", () => {
+		//arrange
+		const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+
+		spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyCatchPokemon = jest.spyOn(testBattle.player1, "catchPokemon");
+
+    spyOptionSelect.mockReturnValueOnce(4).mockReturnValueOnce(2);
+    spyCatchPokemon
+      .mockReturnValueOnce(false);
+    //act
+    testBattle.playerTurn(trainer1, trainer2);
+    //assert
+    expect(spyOptionSelect).toHaveBeenCalledTimes(2);
+    expect(spyCatchPokemon).toHaveBeenCalledTimes(1);
 	});
-	test("PlayerTurn() should invoke catchPokemon() if optionSelect(4) is invoked within the function", () => {
-    //arrange
+	test("PlayerTurn() should invoke removePokemon() if optionSelect(5) is invoked within the function", () => {
+		//arrange
 		const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
-		trainer1.trainerInitialisation();
+    trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
     testBattle = new Battle(trainer1, trainer2);
-		
-		spyOptionSelect = jest.spyOn(testBattle, 'optionSelect');
-		spyCatchPokemon = jest.spyOn(testBattle.player1, 'catchPokemon');
 
-		spyOptionSelect.mockReturnValue(4);
-		spyCatchPokemon.mockReturnValueOnce(true).mockReturnValueOnce(false).mockReturnValueOnce(false);
-		
+		spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyRemovePokemon = jest.spyOn(testBattle.player1, "removePokemon");
+
+    spyOptionSelect.mockReturnValueOnce(5);
+    spyRemovePokemon
+      .mockReturnValueOnce(true);
+    //act
+    testBattle.playerTurn(trainer1, trainer2);
+    //assert
+    expect(spyOptionSelect).toHaveBeenCalledTimes(1);
+    expect(spyRemovePokemon).toHaveBeenCalledTimes(1);
+	});
+	test("If PlayerTurn() invokes removePokemon() and inventory is full, player can select", () => {
+		//arrange
+		const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+
+		spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyRemovePokemon = jest.spyOn(testBattle.player1, "removePokemon");
+
+    spyOptionSelect.mockReturnValueOnce(5).mockReturnValueOnce(2);
+    spyRemovePokemon
+      .mockReturnValueOnce(false).mockReturnValueOnce(true);
+    //act
+    testBattle.playerTurn(trainer1, trainer2);
+    //assert
+    expect(spyOptionSelect).toHaveBeenCalledTimes(2);
+    expect(spyRemovePokemon).toHaveBeenCalledTimes(1);
+	});
+	test("PlayerTurn() should invoke removePokemon() if optionSelect(1) is invoked within the function", () => {
+		//arrange
+		const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+
+		spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+		spyOptionSelect.mockReturnValue(1);
+		spyAttack = jest.spyOn(testBattle, "attack");
+
 		//act
-		testBattle.playerTurn(trainer1, trainer2);
-
-		//assert
+		testBattle.playerTurn();
 		expect(spyOptionSelect).toHaveBeenCalledTimes(1);
-		expect(spyCatchPokemon).toHaveBeenCalledTimes(1);
-	});
-	test("If PlayerTurn() invokes catchPokemon() and inventory is full, player can reselect from menu", () => {
-
-	});
+		expect(spyAttack).toHaveBeenCalledTimes(1);
+});
 });

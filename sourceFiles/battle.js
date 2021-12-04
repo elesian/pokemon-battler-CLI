@@ -18,48 +18,47 @@ Battle.prototype.gameLoop = function () {
   this.whoGoesFirst();
 
   while (this.endGame == false) {
-    if (!playerTurn(trainer1, trainer2)) {
+    if (!playerTurn(this.player1, this.player2)) {
+      playerTurn(this.player2, this.player1);
     }
-
-    //function
-    //player1
-    //select option
-    //execute option
-    //is playerdefeated? endgame==true, break;
-    //player2
-    //select option
-    //execute option
-    //is playerdefeated? endgame==true, break;
   }
 
   console.log(`${this.winner} has defeated ${this.loser}`);
 };
 
-Battle.prototype.playerTurn = function (trainer1, trainer2,) {
-
+Battle.prototype.playerTurn = function (
+  //WILL BE CALLED BY GAMELOOP - NO NEED FOR THIS OUTSIDE OF UNIT TESTING
+  trainer1 = this.player1,
+  trainer2 = this.player2
+) {
   //   "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
-  
-  //USER INPUT HERE 
+
+  //USER INPUT HERE
   let selection = this.optionSelect();
   switch (selection) {
     case 1:
-      this.attack();
+      this.attack(trainer1, trainer2);
       break;
     case 2:
       this.defend(trainer1);
       break;
     case 3:
-      let validSelection = trainer1.selectCurrentPokemon();
-      while (validSelection === false) {
-            validSelection = trainer1.selectCurrentPokemon();}
+      let validSelection3 = trainer1.selectCurrentPokemon();
+      if (validSelection3 === false) {
         this.playerTurn(trainer1, trainer2);
+      }
       break;
     case 4:
-      trainer1.catchPokemon();
+      //if false and inventory full, reselect
+      let validSelection4 = trainer1.catchPokemon();
+      if (validSelection4 === false) {
+        this.playerTurn(trainer1, trainer2);
+      }
       break;
     case 5:
-      if (!trainer1.removePokemon()) {
-        this.player1(trainer1, trainer2);
+      let validSelection5 = trainer1.removePokemon();
+      if (validSelection5 === false) {
+        this.playerTurn(trainer1, trainer2);
       }
       break;
     default:
@@ -99,11 +98,27 @@ Battle.prototype.optionSelect = function (selection = 2) {
     //USER INPUT - SELECTION = INPUT
     if (selection >= 1 && selection <= 5) {
       invalidSelection = false;
-    } else console.log ("Invalid Input.");}
+    } else console.log("Invalid Input.");
+  }
   return selection;
 };
 
-Battle.prototype.attack = function () {
+Battle.prototype.attack = function (trainer1, trainer2) {
+  currentPokemonTrainer1 = trainer1.pokemonInventory[trainer1.currentPokemon];
+  currentPokemonTrainer2 = trainer2.pokemonInventory[trainer1.currentPokemon];
+
+  let baseDamage = currentPokemonTrainer1.damage;
+
+  if (currentPokemonTrainer1.strength === currentPokemonTrainer2.weakness) {
+    console.log(`${currentPokemonTrainer1.move} is super effective !!!`);
+    baseDamage *= 2;
+  } else if (currentPokemonTrainer1.type === currentPokemonTrainer2.strength) {
+    console.log(`${currentPokemonTrainer1.move} is not very effective ...`);
+    baseDamage *= 0.5;
+  }
+
+  //calculate defense and critical modifiers
+
   //take attack damage * crit chance * weakness * defense flag
   //You are attacking with current pokemon with attack for X damage
   //If attacking pokemons type == weakness, it's super effective!
