@@ -47,6 +47,7 @@ Battle.prototype.playerTurn = function (
       if (validSelection3 === false) {
         this.playerTurn(trainer1, trainer2);
       }
+      this.playerTurn(trainer1, trainer2);
       break;
     case 4:
       //if false and inventory full, reselect
