@@ -7,86 +7,125 @@ const {
 const { Trainer } = require("../sourceFiles/trainer.js");
 
 function Battle(trainer1, trainer2) {
-
-        this.endGame = false;
-        this.player1 = trainer1;
-        this.player2 = trainer2;
-        this.winner = null
-    
+  this.endGame = false;
+  this.player1 = trainer1;
+  this.player2 = trainer2;
+  this.winner = null;
+  this.loser = null;
 }
 
-Battle.prototype.gameLoop = function(){
+Battle.prototype.gameLoop = function () {
+  this.whoGoesFirst();
 
-    this.whoGoesFirst();
-
-    while(this.endGame==false){
-
-        
-
+  while (this.endGame == false) {
+    if (!playerTurn(trainer1, trainer2)) {
     }
 
-}
+    //function
+    //player1
+    //select option
+    //execute option
+    //is playerdefeated? endgame==true, break;
+    //player2
+    //select option
+    //execute option
+    //is playerdefeated? endgame==true, break;
+  }
+
+  console.log(`${this.winner} has defeated ${this.loser}`);
+};
+
+Battle.prototype.playerTurn = function (trainer1, trainer2, testSelection) {
+  let selection = this.optionSelect(testSelection);
+
+  //   "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
+
+  switch (selection) {
+    case 1:
+      this.attack();
+      break;
+    case 2:
+      this.defend(trainer1);
+      break;
+    case 3:
+      let invalidSelection = false;
+      while (invalidSelection == false) {
+        if (trainer1.selectCurrentPokemon() == true) {
+          invalidSelection = true;
+        }
+      }
+      this.playerTurn(trainer1, trainer2);
+
+      break;
+    case 4:
+      if (!trainer1.catchPokemon()) {
+        this.playerTurn(trainer1, trainer2);
+      }
+      break;
+    case 5:
+      if (!trainer1.removePokemon()) {
+        this.player1(trainer1, trainer2);
+      }
+      break;
+    default:
+    // code block
+  }
+
+  if (trainer2.playerDefeated == true) {
+    return true;
+  } else return false;
+};
 
 Battle.prototype.whoGoesFirst = function () {
-    let firstPlayer = this.numberRandomiser();
-    if(firstPlayer===false){
-        console.log("numberRandomiser() returned false - player 2 will go frst!");
-        let temp = this.player2;
-        this.player2 = this.player1;
-        this.player1 = temp;
-    }
-    console.log(`${this.player1.name} will go first.`);
+  let firstPlayer = this.numberRandomiser();
+  if (firstPlayer === false) {
+    console.log("numberRandomiser() returned false - player 2 will go frst!");
+    let temp = this.player2;
+    this.player2 = this.player1;
+    this.player1 = temp;
   }
+  console.log(`${this.player1.name} will go first.`);
+};
 
 //Used to determine which player goes first and whether critical hit
 Battle.prototype.numberRandomiser = function () {
-    let randomNumber = Math.round(Math.random());
-    if(randomNumber===1) return true;
-    else return false;
+  let randomNumber = Math.round(Math.random());
+  if (randomNumber === 1) return true;
+  else return false;
+};
+
+//selection variable for testing purposes; to be overriden with UI
+Battle.prototype.optionSelect = function (selection = 2) {
+  let invalidSelection = true;
+  while (invalidSelection) {
+    console.log(
+      "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
+    );
+    //USER INPUT - SELECTION
+    if (selection >= 1 && selection <= 5) {
+      invalidSelection = false;
+    } else "Invalid Input.";
   }
+  return selection;
+};
 
-  //selection variable for testing purposes; to be overriden with UI
-  Battle.prototype.optionSelect = function (selection=1) {
-    let invalidSelection = true;
-    while(invalidSelection){  
-    console.log("Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon ");
-      //USER INPUT - SELECTION
-      if(selection >= 1 && selection <=5){
-          invalidSelection=false;
-      } else "Invalid Input."}
-      return selection;}
-  
+Battle.prototype.attack = function () {
+  //take attack damage * crit chance * weakness * defense flag
+  //You are attacking with current pokemon with attack for X damage
+  //If attacking pokemons type == weakness, it's super effective!
+  //If attacking pokemons type == strength, it's not very effective!
+  //pokemon is defending resists your attack!
+  //if pokemon hp <=0, then remove current Pokemon
+  //if playerdefeated = true, break, change flag;
+};
 
-  Battle.prototype.attack = function () {
-
-        //take attack damage * crit chance * weakness * defense flag
-        //You are attacking with current pokemon with attack for X damage
-        //If attacking pokemons type == weakness, it's super effective!
-        //If attacking pokemons type == strength, it's not very effective!
-        //pokemon is defending resists your attack!
-        //if pokemon hp <=0, then remove current Pokemon
-        //if playerdefeated = true, break, change flag;
-  }
-
-  Battle.prototype.defend = function (trainer) {
-    console.log(`Your current Pokemon ${trainer.pokemonInventory[trainer.currentPokemon].name} is now defending!`);  
-    trainer.defendStatus=true;
-  }
-
- Battle.prototype.switchPokemon = function () {
-
-
-}
-
-Battle.prototype.catchPokemon = function () {
-
-
-}
-
-Battle.prototype.removePokemon = function () {
-
-
-}
-
+Battle.prototype.defend = function (trainer) {
+  console.log(
+    `Your current Pokemon ${
+      trainer.pokemonInventory[trainer.currentPokemon].name
+    } is now defending!`
+  );
+  trainer.defendStatus = true;
+};
 
 module.exports = { Battle };
