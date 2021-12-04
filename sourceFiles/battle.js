@@ -35,11 +35,12 @@ Battle.prototype.gameLoop = function () {
   console.log(`${this.winner} has defeated ${this.loser}`);
 };
 
-Battle.prototype.playerTurn = function (trainer1, trainer2, testSelection) {
-  let selection = this.optionSelect(testSelection);
+Battle.prototype.playerTurn = function (trainer1, trainer2,) {
 
   //   "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
-
+  
+  //USER INPUT HERE 
+  let selection = this.optionSelect();
   switch (selection) {
     case 1:
       this.attack();
@@ -48,19 +49,13 @@ Battle.prototype.playerTurn = function (trainer1, trainer2, testSelection) {
       this.defend(trainer1);
       break;
     case 3:
-      let invalidSelection = false;
-      while (invalidSelection == false) {
-        if (trainer1.selectCurrentPokemon() == true) {
-          invalidSelection = true;
-        }
-      }
-      this.playerTurn(trainer1, trainer2);
-
+      let validSelection = trainer1.selectCurrentPokemon();
+      while (validSelection === false) {
+            validSelection = trainer1.selectCurrentPokemon();}
+        this.playerTurn(trainer1, trainer2);
       break;
     case 4:
-      if (!trainer1.catchPokemon()) {
-        this.playerTurn(trainer1, trainer2);
-      }
+      trainer1.catchPokemon();
       break;
     case 5:
       if (!trainer1.removePokemon()) {
@@ -101,11 +96,10 @@ Battle.prototype.optionSelect = function (selection = 2) {
     console.log(
       "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
     );
-    //USER INPUT - SELECTION
+    //USER INPUT - SELECTION = INPUT
     if (selection >= 1 && selection <= 5) {
       invalidSelection = false;
-    } else "Invalid Input.";
-  }
+    } else console.log ("Invalid Input.");}
   return selection;
 };
 

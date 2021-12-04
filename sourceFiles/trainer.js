@@ -87,7 +87,7 @@ Trainer.prototype.catchPokemon = function () {
       console.log("Pokemon caught successfully !!!");
       return true;
     } else console.log("Pokemon escaped capture !!!");
-    return true;
+    return false;
   } else console.log("Inventory Full. Unable to catch new Pokemon.");
   return false;
 };
