@@ -319,7 +319,7 @@ describe("Test suite for Battle", () => {
         )
       );
   });
-  test.only("Attack successfully reduces defenders hitpoints", () => {
+  test("Attack successfully reduces defenders hitpoints", () => {
     //arrange
     const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
@@ -355,7 +355,7 @@ describe("Test suite for Battle", () => {
     trainer2.trainerInitialisation();
     testBattle = new Battle(trainer1, trainer2);
 
-    spyWhoGoesFirst = jest.spyOn(testbattle, "whoGoesFirst");
+    spyWhoGoesFirst = jest.spyOn(testBattle, "whoGoesFirst");
     testBattle.endGame = true;
     let exitGameLoop = testBattle.gameLoop();
     expect(exitGameLoop).toEqual(true);
@@ -371,9 +371,11 @@ describe("Test suite for Battle", () => {
 
     //act
     spyWhoGoesFirst = jest.spyOn(testBattle, "whoGoesFirst");
-    spyPlayerTurn = jest.spyOn(testBattle, "playerTurn");
     spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyNumberRandomiser = jest.spyOn(testBattle, "numberRandomiser");
+    spyNumberRandomiser.mockReturnValue(true);
     spyOptionSelect.mockReturnValue(1);
+    trainer1.playerDefeated = true;
     testBattle.gameLoop();
   });
 });

@@ -1,3 +1,4 @@
+const { threadId } = require("worker_threads");
 const {
   Pokemon,
   pokemonData,
@@ -39,9 +40,7 @@ Trainer.prototype.selectCurrentPokemon = function (selection = 0) {
   //reset current pokemon
   if (selection >= 0 && selection <= this.pokemonInventoryMaxSize) {
     this.currentPokemon = selection;
-    let currentPokemon = Object.values(
-      this.pokemonInventory[this.currentPokemon]
-    )[0];
+    let currentPokemon = this.pokemonInventory[this.currentPokemon].name;
     console.log(
       `Your current Pokemon is slot ${selection} : ${currentPokemon}`
     );
@@ -94,8 +93,11 @@ Trainer.prototype.catchPokemon = function () {
 //pokemonDefeated
 Trainer.prototype.pokemonDefeated = function () {
   if (this.pokemonInventoryMaxSize > 1) {
+		console.log(`${this.pokemonInventory[this.currentPokemon].name} is defeated !!!`);
     this.pokemonInventory.splice(this.currentPokemon, 1);
     this.pokemonInventoryMaxSize--;
+		console.log(`${this.name} now has one less inventory space. ${this.name} now has ${this.pokemonInventoryMaxSize} spaces.`);
+    console.log("Please select a new Pokemon.");
     this.selectCurrentPokemon();
   } else this.playerDefeated = true;
 };

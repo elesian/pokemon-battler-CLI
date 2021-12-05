@@ -63,7 +63,7 @@ pokemonData.flareonObj = {
   damage: 20,
   strength: "grass",
   weakness: "water",
-  sound: "EFla... Flareon!",
+  sound: "Fla... Flareon!",
 };
 
 pokemonData.vaporeonObj = {
