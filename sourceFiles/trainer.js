@@ -14,19 +14,24 @@ function Trainer(inputName = "Ash") {
   this.playerDefeated = false;
 }
 
-Trainer.prototype.trainerInitialisation = function () {
+Trainer.prototype.randomizePokemon = function () {
   const pokemonKey = Object.keys(pokemonData);
+  let randomNumber = Math.floor(Math.random() * 7);
+  const newPokemon = new Pokemon(pokemonData[pokemonKey[randomNumber]]);
+  return newPokemon;
+};
+
+Trainer.prototype.trainerInitialisation = function () {
   for (let i = 0; i < 6; i++) {
-    let randomNumber = Math.floor(Math.random() * 7);
-    const newPokemon = new Pokemon(pokemonData[pokemonKey[randomNumber]]);
-    this.pokemonInventory.push(newPokemon);
+    this.pokemonInventory.push(this.randomizePokemon());
   }
   console.log("Please select a starting Pokemon.");
   this.selectCurrentPokemon();
 };
 
 Trainer.prototype.pokemonInformation = function () {
-  let printCurrentNames = `${this.name}'s inventory of Pokemon is: \n\n`;
+	console.log(this.pokemonInventory[0].name);
+	let printCurrentNames = `${this.name}'s inventory of Pokemon is: \n\n`;
   for (let i = 0; i < this.pokemonInventory.length; i++) {
     printCurrentNames += i + ". " + this.pokemonInventory[i].name + " " + "\n";
   }
@@ -84,7 +89,7 @@ Trainer.prototype.catchPokemon = function () {
     //randomize 80% chance of catching a Pokemon
     let catchProbability = Math.random();
     if (catchProbability <= 0.8) {
-      this.pokemonInventory.push(randomizePokemon(pokemonData));
+      this.pokemonInventory.push(this.randomizePokemon());
       console.log("Pokemon caught successfully !!!");
       return true;
     } else console.log("Pokemon escaped capture !!!");
@@ -96,9 +101,9 @@ Trainer.prototype.catchPokemon = function () {
 //pokemonDefeated
 Trainer.prototype.pokemonDefeated = function () {
   console.log(
-		`${this.pokemonInventory[this.currentPokemon].name} is defeated !!!`
-	);
-	if (this.pokemonInventoryMaxSize > 1) {
+    `${this.pokemonInventory[this.currentPokemon].name} is defeated !!!`
+  );
+  if (this.pokemonInventoryMaxSize > 1) {
     this.pokemonInventory.splice(this.currentPokemon, 1);
     this.pokemonInventoryMaxSize--;
     console.log(

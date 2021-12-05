@@ -37,20 +37,6 @@ describe("Test suite for creating Pokemon", () => {
       Object.values(pokemonParameters)
     );
   });
-  test("Randomise function that returns a random pokemon", () => {
-    //arrange
-    const pokemonDataTable = pokemonData;
-    //act
-    let returnPokemon = randomizePokemon(pokemonDataTable);
-    //assert
-    let found = false;
-    for (key in pokemonDataTable) {
-      if (key == returnPokemon["name"]);
-      found = true;
-    }
-    expect(typeof returnPokemon).toEqual("object");
-    expect(found).toEqual(true);
-  });
   test("Is correct Pokemon sound returned?", () => {
     //arrange
     const eeveeData = pokemonData["eeveeObj"];

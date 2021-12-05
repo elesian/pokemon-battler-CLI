@@ -34,9 +34,13 @@ Battle.prototype.gameLoop = function () {
 Battle.prototype.playerTurn = function (trainer1, trainer2) {
   //WILL BE CALLED BY GAMELOOP - NO NEED FOR THIS OUTSIDE OF UNIT TESTING
   //   "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
-  console.log(`${trainer1.name} attacks ${trainer2.name}`);
+  console.log(`It is now ${trainer1.name}'s turn !!!`);
+  console.log(
+    "Please select from the following options: \n\n 1. Attack \n 2. Defend \n 3. Change current Pokemon \n 4. Catch new Pokemon \n 5. Remove Pokemon"
+  );
   //USER INPUT HERE
   let selection = this.optionSelect();
+  console.log(`You have selected option ${selection}`);
   switch (selection) {
     case 1:
       this.attack(trainer1, trainer2);
@@ -49,13 +53,14 @@ Battle.prototype.playerTurn = function (trainer1, trainer2) {
       this.playerTurn(trainer1, trainer2);
       break;
     case 4:
-      //if false and inventory full, reselect
+      //if inventory is full -> MENU
       let validSelection4 = trainer1.catchPokemon();
       if (validSelection4 === false) {
         this.playerTurn(trainer1, trainer2);
       }
       break;
     case 5:
+      //if invalid selection -> MENU
       let validSelection5 = trainer1.removePokemon();
       if (validSelection5 === false) {
         this.playerTurn(trainer1, trainer2);
