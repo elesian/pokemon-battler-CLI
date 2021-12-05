@@ -22,7 +22,7 @@ Trainer.prototype.trainerInitialisation = function () {
 };
 
 Trainer.prototype.pokemonInformation = function () {
-  let printCurrentNames = "Your Inventory of Pokemon is: \n\n";
+  let printCurrentNames = `${this.name}'s inventory of Pokemon is: \n\n`;
   for (let i = 0; i < this.pokemonInventory.length; i++) {
     printCurrentNames += i + ". " + this.pokemonInventory[i].name + " " + "\n";
   }
@@ -93,7 +93,6 @@ Trainer.prototype.catchPokemon = function () {
 
 //pokemonDefeated
 Trainer.prototype.pokemonDefeated = function () {
-  console.log("Your Pokemon was defeated !!!");
   if (this.pokemonInventoryMaxSize > 1) {
     this.pokemonInventory.splice(this.currentPokemon, 1);
     this.pokemonInventoryMaxSize--;

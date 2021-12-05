@@ -16,26 +16,26 @@ function Battle(trainer1, trainer2) {
 
 Battle.prototype.gameLoop = function () {
   this.whoGoesFirst();
+  console.log(`${this.player2.name} is attacked by ${this.player1.name}`);
 
-  while (this.endGame == false) {
-    //reset defence flags
+  while (this.endGame === false) {
+    //reset defence flag player 1
     this.player1.defendStatus = false;
-    if (!playerTurn(this.player1, this.player2)) {
+    if (!this.playerTurn(this.player1, this.player2)) {
+      //reset defence flag player 2
       this.player2.defendStatus = false;
-      playerTurn(this.player2, this.player1);
+      this.playerTurn(this.player2, this.player1);
     }
   }
 
   console.log(`${this.winner} has defeated ${this.loser}`);
+  return true;
 };
 
-Battle.prototype.playerTurn = function (
+Battle.prototype.playerTurn = function (trainer1, trainer2) {
   //WILL BE CALLED BY GAMELOOP - NO NEED FOR THIS OUTSIDE OF UNIT TESTING
-  trainer1 = this.player1,
-  trainer2 = this.player2
-) {
   //   "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
-
+  console.log(`${this.player1.name} attacks ${this.player2.name}`);
   //USER INPUT HERE
   let selection = this.optionSelect();
   switch (selection) {
@@ -67,7 +67,9 @@ Battle.prototype.playerTurn = function (
   }
 
   if (trainer2.playerDefeated == true) {
-      this.endGame=true;
+    this.endGame = true;
+    this.winner = trainer1.name;
+    this.loser = trainer2.name;
     return true;
   } else return false;
 };
@@ -105,12 +107,19 @@ Battle.prototype.optionSelect = function (selection = 2) {
   return selection;
 };
 
-Battle.prototype.attack = function (trainer1, trainer2) {
+Battle.prototype.attack = function () {
+  trainer1 = this.player1;
+  trainer2 = this.player2;
   currentPokemonTrainer1 = trainer1.pokemonInventory[trainer1.currentPokemon];
-  currentPokemonTrainer2 = trainer2.pokemonInventory[trainer1.currentPokemon];
+  currentPokemonTrainer2 = trainer2.pokemonInventory[trainer2.currentPokemon];
   let trainerOneDamage = this.damageCalculator(trainer1, trainer2);
-  
-  //is Pokemon dead? If so, call 
+  currentPokemonTrainer2.hitPoints -= trainerOneDamage;
+
+  if (currentPokemonTrainer2.hitPoints <= 0) {
+    console.log(`${currentPokemonTrainer2.name} is defeated !!!`);
+    console.log("Please select a new Pokemon");
+    trainer2.pokemonDefeated();
+  }
 };
 
 Battle.prototype.damageCalculator = function (trainer1, trainer2) {
@@ -120,8 +129,11 @@ Battle.prototype.damageCalculator = function (trainer1, trainer2) {
   //calculate base damage
   let baseDamage = currentPokemonTrainer1.damage;
 
-  //
-  console.log(`${currentPokemonTrainer1.name} attacks ${currentPokemonTrainer2.name} with ${currentPokemonTrainer1.move}`);
+  //Announce who is attacking who with what move
+  console.log(`${currentPokemonTrainer1.sound}`);
+  console.log(
+    `${currentPokemonTrainer1.name} attacks ${currentPokemonTrainer2.name} with ${currentPokemonTrainer1.move}`
+  );
 
   //calculate damage modifiers
   if (currentPokemonTrainer1.type === currentPokemonTrainer2.weakness) {

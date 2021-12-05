@@ -25,8 +25,7 @@ describe("Test suite for creating Pokemon", () => {
     expect(testPokemon.hasOwnProperty("strength")).toEqual(true);
     expect(testPokemon.hasOwnProperty("weakness")).toEqual(true);
     expect(testPokemon.hasOwnProperty("defend")).toEqual(true);
-		expect(testPokemon.hasOwnProperty("sound")).toEqual(true)
-
+    expect(testPokemon.hasOwnProperty("sound")).toEqual(true);
   });
   test("Instance of pokemon stores passed parameters from pokemonDatabase ", () => {
     //arrange

@@ -215,7 +215,7 @@ describe("Test suite for Battle", () => {
     expect(spyOptionSelect).toHaveBeenCalledTimes(2);
     expect(spyRemovePokemon).toHaveBeenCalledTimes(1);
   });
-  test("PlayerTurn() should invoke removePokemon() if optionSelect(1) is invoked within the function", () => {
+  test("PlayerTurn() should invoke attack() if optionSelect(1) is invoked within the function", () => {
     //arrange
     const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
@@ -228,67 +228,152 @@ describe("Test suite for Battle", () => {
     spyAttack = jest.spyOn(testBattle, "attack");
 
     //act
-    testBattle.playerTurn();
+    testBattle.playerTurn(trainer1, trainer2);
     expect(spyOptionSelect).toHaveBeenCalledTimes(1);
     expect(spyAttack).toHaveBeenCalledTimes(1);
   });
-	test("Damage calculator returns a damage amount", () => {
-		const trainer1 = new Trainer("Ash");
+  test("Damage calculator returns a damage amount", () => {
+    const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
     trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
-		testBattle = new Battle(trainer1, trainer2);
-		const returnDamage = testBattle.damageCalculator(trainer1, trainer2);
-		expect(typeof returnDamage).toEqual("number");
-		expect(returnDamage).toBeGreaterThan(0);
-	});
-	test.only("Damage calculator returns a damage amount modified by criticals and damage modifiers", () => {
-		const trainer1 = new Trainer("Ash");
+    testBattle = new Battle(trainer1, trainer2);
+    const returnDamage = testBattle.damageCalculator(trainer1, trainer2);
+    expect(typeof returnDamage).toEqual("number");
+    expect(returnDamage).toBeGreaterThan(0);
+  });
+  test("Damage calculator returns a damage amount modified by criticals and damage modifiers", () => {
+    const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
     trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
-		testBattle = new Battle(trainer1, trainer2);
+    testBattle = new Battle(trainer1, trainer2);
 
-		spyCriticalHit = jest.spyOn(testBattle, 'numberRandomiser')
-		//CRITCAL SET TO ON
-		spyCriticalHit.mockReturnValue(true);
-		
-		const returnDamage = testBattle.damageCalculator(trainer1, trainer2);
-		//return Critical AND defending pokemon is WEAK against attacking Pokemon
-		if(trainer1.pokemonInventory[trainer1.currentPokemon].type===trainer2.pokemonInventory[trainer2.currentPokemon].weakness){
-		expect(returnDamage).toEqual(4*trainer1.pokemonInventory[trainer1.currentPokemon].damage);
-		}
-		//return Critical AND defending pokemon is STRONG against attacking Pokemon
-		else if(trainer1.pokemonInventory[trainer1.currentPokemon].type===trainer2.pokemonInventory[trainer2.currentPokemon].strength){
-			expect(returnDamage).toEqual(trainer1.pokemonInventory[trainer1.currentPokemon].damage);
-		}
-		else expect(returnDamage).toEqual(2*trainer1.pokemonInventory[trainer1.currentPokemon].damage);
-	});
-	test("Damage calculator returns a damage amount modified by defenders defend status", () => {
-		const trainer1 = new Trainer("Ash");
+    spyCriticalHit = jest.spyOn(testBattle, "numberRandomiser");
+    //CRITCAL SET TO ON
+    spyCriticalHit.mockReturnValue(true);
+
+    const returnDamage = testBattle.damageCalculator(trainer1, trainer2);
+    //return Critical AND defending pokemon is WEAK against attacking Pokemon
+    if (
+      trainer1.pokemonInventory[trainer1.currentPokemon].type ===
+      trainer2.pokemonInventory[trainer2.currentPokemon].weakness
+    ) {
+      expect(returnDamage).toEqual(
+        4 * trainer1.pokemonInventory[trainer1.currentPokemon].damage
+      );
+    }
+    //return Critical AND defending pokemon is STRONG against attacking Pokemon
+    else if (
+      trainer1.pokemonInventory[trainer1.currentPokemon].type ===
+      trainer2.pokemonInventory[trainer2.currentPokemon].strength
+    ) {
+      expect(returnDamage).toEqual(
+        trainer1.pokemonInventory[trainer1.currentPokemon].damage
+      );
+    } else
+      expect(returnDamage).toEqual(
+        2 * trainer1.pokemonInventory[trainer1.currentPokemon].damage
+      );
+  });
+  test("Damage calculator returns a damage amount modified by defenders defend status", () => {
+    const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
     trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
-		trainer1.defendStatus=false;
-		trainer2.defendStatus=true;
-		testBattle = new Battle(trainer1, trainer2);
+    trainer1.defendStatus = false;
+    trainer2.defendStatus = true;
+    testBattle = new Battle(trainer1, trainer2);
 
-		spyCriticalHit = jest.spyOn(testBattle, 'numberRandomiser')
-		//CRITICAL SET TO OFF
-		spyCriticalHit.mockReturnValue(false);
-		
-		const returnDamage = testBattle.damageCalculator(trainer1, trainer2);
-		
-		//return defending pokemon is WEAK against attacking Pokemon AND defending
-		if(trainer1.pokemonInventory[trainer1.currentPokemon].type===trainer2.pokemonInventory[trainer2.currentPokemon].weakness){
-		expect(returnDamage).toEqual(Math.round(2*trainer1.pokemonInventory[trainer1.currentPokemon].damage));
-		}
-		//return defending pokemon is STRONG against attacking Pokemon AND defending
-		else if(trainer1.pokemonInventory[trainer1.currentPokemon].type===trainer2.pokemonInventory[trainer2.currentPokemon].strength){
-			expect(returnDamage).toEqual(Math.round(0.5*trainer1.pokemonInventory[trainer1.currentPokemon].damage));
-		}
-		else expect(returnDamage).toEqual(Math.round(1*trainer1.pokemonInventory[trainer1.currentPokemon].damage));
-	});
-	
+    spyCriticalHit = jest.spyOn(testBattle, "numberRandomiser");
+    //CRITICAL SET TO OFF
+    spyCriticalHit.mockReturnValue(false);
 
+    const returnDamage = testBattle.damageCalculator(trainer1, trainer2);
+
+    //return defending pokemon is WEAK against attacking Pokemon AND defending
+    if (
+      trainer1.pokemonInventory[trainer1.currentPokemon].type ===
+      trainer2.pokemonInventory[trainer2.currentPokemon].weakness
+    ) {
+      expect(returnDamage).toEqual(
+        Math.round(
+          2 * trainer1.pokemonInventory[trainer1.currentPokemon].damage
+        )
+      );
+    }
+    //return defending pokemon is STRONG against attacking Pokemon AND defending
+    else if (
+      trainer1.pokemonInventory[trainer1.currentPokemon].type ===
+      trainer2.pokemonInventory[trainer2.currentPokemon].strength
+    ) {
+      expect(returnDamage).toEqual(
+        Math.round(
+          0.5 * trainer1.pokemonInventory[trainer1.currentPokemon].damage
+        )
+      );
+    } else
+      expect(returnDamage).toEqual(
+        Math.round(
+          1 * trainer1.pokemonInventory[trainer1.currentPokemon].damage
+        )
+      );
+  });
+  test.only("Attack successfully reduces defenders hitpoints", () => {
+    //arrange
+    const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+    let beforeHP = trainer2.pokemonInventory[trainer2.currentPokemon].hitPoints;
+    //act
+    testBattle.attack(trainer1, trainer2);
+    let afterHP = trainer2.pokemonInventory[trainer2.currentPokemon].hitPoints;
+    expect(afterHP).toBeLessThan(beforeHP);
+  });
+  test("If a Pokemon is defeated, attack will call pokemonDefeated()", () => {
+    //arrange
+    const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+    spyDefeatedPokemon = jest.spyOn(trainer2, "pokemonDefeated");
+    //arrange
+    //Invoke attack function until defender HP <= 0
+    while (trainer2.pokemonInventory[trainer2.currentPokemon].hitPoints > 0) {
+      testBattle.attack(trainer1, trainer2);
+    }
+    //assert
+    expect(spyDefeatedPokemon).toHaveBeenCalled();
+  });
+  test("GameLoop returns a victory message", () => {
+    const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+
+    spyWhoGoesFirst = jest.spyOn(testbattle, "whoGoesFirst");
+    testBattle.endGame = true;
+    let exitGameLoop = testBattle.gameLoop();
+    expect(exitGameLoop).toEqual(true);
+    expect(spyWhoGoesFirst).toHaveBeenCalledTimes(1);
+  });
+  test.only("GameLoop returns a victory message when a player is defeated", () => {
+    //arrange
+    const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+
+    //act
+    spyWhoGoesFirst = jest.spyOn(testBattle, "whoGoesFirst");
+    spyPlayerTurn = jest.spyOn(testBattle, "playerTurn");
+    spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyOptionSelect.mockReturnValue(1);
+    testBattle.gameLoop();
+  });
 });
