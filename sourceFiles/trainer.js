@@ -15,8 +15,11 @@ function Trainer(inputName = "Ash") {
 }
 
 Trainer.prototype.trainerInitialisation = function () {
+  const pokemonKey = Object.keys(pokemonData);
   for (let i = 0; i < 6; i++) {
-    this.pokemonInventory.push(randomizePokemon(pokemonData));
+    let randomNumber = Math.floor(Math.random() * 7);
+    const newPokemon = new Pokemon(pokemonData[pokemonKey[randomNumber]]);
+    this.pokemonInventory.push(newPokemon);
   }
   console.log("Please select a starting Pokemon.");
   this.selectCurrentPokemon();
@@ -92,11 +95,15 @@ Trainer.prototype.catchPokemon = function () {
 
 //pokemonDefeated
 Trainer.prototype.pokemonDefeated = function () {
-  if (this.pokemonInventoryMaxSize > 1) {
-		console.log(`${this.pokemonInventory[this.currentPokemon].name} is defeated !!!`);
+  console.log(
+		`${this.pokemonInventory[this.currentPokemon].name} is defeated !!!`
+	);
+	if (this.pokemonInventoryMaxSize > 1) {
     this.pokemonInventory.splice(this.currentPokemon, 1);
     this.pokemonInventoryMaxSize--;
-		console.log(`${this.name} now has one less inventory space. ${this.name} now has ${this.pokemonInventoryMaxSize} spaces.`);
+    console.log(
+      `${this.name} now has one less inventory space. ${this.name} now has ${this.pokemonInventoryMaxSize} spaces.`
+    );
     console.log("Please select a new Pokemon.");
     this.selectCurrentPokemon();
   } else this.playerDefeated = true;

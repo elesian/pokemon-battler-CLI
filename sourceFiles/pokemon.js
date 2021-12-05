@@ -35,12 +35,7 @@ Pokemon.prototype.propertyValues = function () {
   return returnObj;
 };
 
-function randomizePokemon(pokemonDatabase) {
-  let pokemonKeys = Object.keys(pokemonDatabase);
-  //generate random number
-  let randomNumber = Math.floor(Math.random() * 7);
-  return pokemonDatabase[pokemonKeys[randomNumber]];
-}
+
 
 //used to pass parameters to Pokemon class
 const pokemonData = {};
@@ -121,4 +116,4 @@ pokemonData.bulbasaurObj = {
   sound: "Bul... Bulbasaur!",
 };
 
-module.exports = { Pokemon, pokemonData, randomizePokemon };
+module.exports = { Pokemon, pokemonData };

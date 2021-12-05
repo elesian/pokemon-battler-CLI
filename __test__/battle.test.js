@@ -328,7 +328,7 @@ describe("Test suite for Battle", () => {
     testBattle = new Battle(trainer1, trainer2);
     let beforeHP = trainer2.pokemonInventory[trainer2.currentPokemon].hitPoints;
     //act
-    testBattle.attack(trainer1, trainer2);
+		testBattle.attack(trainer1, trainer2);
     let afterHP = trainer2.pokemonInventory[trainer2.currentPokemon].hitPoints;
     expect(afterHP).toBeLessThan(beforeHP);
   });
@@ -361,7 +361,7 @@ describe("Test suite for Battle", () => {
     expect(exitGameLoop).toEqual(true);
     expect(spyWhoGoesFirst).toHaveBeenCalledTimes(1);
   });
-  test.only("GameLoop returns a victory message when a player is defeated", () => {
+  test("GameLoop returns a victory message when a player is defeated", () => {
     //arrange
     const trainer1 = new Trainer("Ash");
     const trainer2 = new Trainer("Brock");
@@ -375,6 +375,20 @@ describe("Test suite for Battle", () => {
     spyNumberRandomiser.mockReturnValue(true);
     spyOptionSelect.mockReturnValue(1);
 		trainer2.playerDefeated=true;
+    testBattle.gameLoop();
+  });
+	test.only("GameLoop correctly loops and returns winner", () => {
+    //arrange
+    const trainer1 = new Trainer("Ash");
+    const trainer2 = new Trainer("Brock");
+    trainer1.trainerInitialisation();
+    trainer2.trainerInitialisation();
+    testBattle = new Battle(trainer1, trainer2);
+    //act
+    spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
+    spyNumberRandomiser = jest.spyOn(testBattle, "numberRandomiser");
+    spyNumberRandomiser.mockReturnValue(true);
+    spyOptionSelect.mockReturnValue(1);
     testBattle.gameLoop();
   });
 });

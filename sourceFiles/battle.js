@@ -1,3 +1,4 @@
+const { CustomConsole } = require("@jest/console");
 const {
   Pokemon,
   pokemonData,
@@ -108,17 +109,21 @@ Battle.prototype.optionSelect = function (selection = 2) {
 
 //TEST THIS FUNCTION
 Battle.prototype.attack = function (trainer1, trainer2) {
-  currentPokemonTrainer1 = trainer1.pokemonInventory[trainer1.currentPokemon];
   currentPokemonTrainer2 = trainer2.pokemonInventory[trainer2.currentPokemon];
   let trainerOneDamage = this.damageCalculator(trainer1, trainer2);
-  if (currentPokemonTrainer2.hitPoints - trainerOneDamage <= 0) {
+  currentPokemonTrainer2.hitPoints -= trainerOneDamage;
+  if (currentPokemonTrainer2.hitPoints <= 0) {
     trainer2.pokemonDefeated();
+  } else {
+    console.log(
+      `${currentPokemonTrainer2.name}'s new HP is ${currentPokemonTrainer2.hitPoints}`
+    );
   }
 };
 
 Battle.prototype.damageCalculator = function (trainer1, trainer2) {
   currentPokemonTrainer1 = trainer1.pokemonInventory[trainer1.currentPokemon];
-  currentPokemonTrainer2 = trainer2.pokemonInventory[trainer1.currentPokemon];
+  currentPokemonTrainer2 = trainer2.pokemonInventory[trainer2.currentPokemon];
 
   //calculate base damage
   let baseDamage = currentPokemonTrainer1.damage;
