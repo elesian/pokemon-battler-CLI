@@ -1,4 +1,5 @@
 const { expect } = require("@jest/globals");
+const { spyOn } = require("jest-mock");
 const {
   Pokemon,
   pokemonData,
@@ -137,10 +138,10 @@ describe("Test suite for Trainer", () => {
     testTrainer.removePokemon();
     testTrainer.removePokemon();
     expect(testTrainer.pokemonInventory.length).toEqual(4);
+    spyCatchPokemon = spyOn(Math, "random");
+    spyCatchPokemon.mockReturnValue(0.8);
     testTrainer.catchPokemon();
-    const catchAttempt = testTrainer.catchPokemon();
-    expect(testTrainer.pokemonInventory.length).toBeGreaterThanOrEqual(4);
-    expect(catchAttempt).toEqual(true);
+    expect(testTrainer.pokemonInventory.length).toEqual(5);
   });
   test("If Pokemon is defeated, remove from inventory", () => {
     //arrange

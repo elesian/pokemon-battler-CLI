@@ -18,7 +18,10 @@ Battle.prototype.gameLoop = function () {
   this.whoGoesFirst();
 
   while (this.endGame == false) {
+    //reset defence flags
+    this.player1.defendStatus = false;
     if (!playerTurn(this.player1, this.player2)) {
+      this.player2.defendStatus = false;
       playerTurn(this.player2, this.player1);
     }
   }
@@ -43,10 +46,7 @@ Battle.prototype.playerTurn = function (
       this.defend(trainer1);
       break;
     case 3:
-      let validSelection3 = trainer1.selectCurrentPokemon();
-      if (validSelection3 === false) {
-        this.playerTurn(trainer1, trainer2);
-      }
+      trainer1.selectCurrentPokemon();
       this.playerTurn(trainer1, trainer2);
       break;
     case 4:
@@ -67,6 +67,7 @@ Battle.prototype.playerTurn = function (
   }
 
   if (trainer2.playerDefeated == true) {
+      this.endGame=true;
     return true;
   } else return false;
 };
@@ -107,26 +108,52 @@ Battle.prototype.optionSelect = function (selection = 2) {
 Battle.prototype.attack = function (trainer1, trainer2) {
   currentPokemonTrainer1 = trainer1.pokemonInventory[trainer1.currentPokemon];
   currentPokemonTrainer2 = trainer2.pokemonInventory[trainer1.currentPokemon];
+  let trainerOneDamage = this.damageCalculator(trainer1, trainer2);
+  
+  //is Pokemon dead? If so, call 
+};
 
+Battle.prototype.damageCalculator = function (trainer1, trainer2) {
+  currentPokemonTrainer1 = trainer1.pokemonInventory[trainer1.currentPokemon];
+  currentPokemonTrainer2 = trainer2.pokemonInventory[trainer1.currentPokemon];
+
+  //calculate base damage
   let baseDamage = currentPokemonTrainer1.damage;
 
-  if (currentPokemonTrainer1.strength === currentPokemonTrainer2.weakness) {
+  //
+  console.log(`${currentPokemonTrainer1.name} attacks ${currentPokemonTrainer2.name} with ${currentPokemonTrainer1.move}`);
+
+  //calculate damage modifiers
+  if (currentPokemonTrainer1.type === currentPokemonTrainer2.weakness) {
+    console.log(
+      `${currentPokemonTrainer2.name} is weak against ${currentPokemonTrainer1.type}`
+    );
     console.log(`${currentPokemonTrainer1.move} is super effective !!!`);
     baseDamage *= 2;
   } else if (currentPokemonTrainer1.type === currentPokemonTrainer2.strength) {
+    console.log(
+      `${currentPokemonTrainer2.name} is resistant against ${currentPokemonTrainer1.type}`
+    );
     console.log(`${currentPokemonTrainer1.move} is not very effective ...`);
     baseDamage *= 0.5;
   }
+  //factor in defending pokemons defense status
+  if (trainer1.defendStatus == true) {
+    console.log(`${currentPokemonTrainer2.name} is defending !!! Damage reduced
+           by 50%`);
+    baseDamage *= 0.5;
+  }
 
-  //calculate defense and critical modifiers
-
-  //take attack damage * crit chance * weakness * defense flag
-  //You are attacking with current pokemon with attack for X damage
-  //If attacking pokemons type == weakness, it's super effective!
-  //If attacking pokemons type == strength, it's not very effective!
-  //pokemon is defending resists your attack!
-  //if pokemon hp <=0, then remove current Pokemon
-  //if playerdefeated = true, break, change flag;
+  //calculate critical hit
+  let criticalHit = this.numberRandomiser();
+  if (criticalHit == true) {
+    console.log(`${currentPokemonTrainer1.name} does a CRITICAL hit !!!`);
+    baseDamage *= 2;
+  }
+  //return rounded final damage calculation
+  baseDamage = Math.round(baseDamage);
+  console.log(`${currentPokemonTrainer1.name} hits you for ${baseDamage}`);
+  return baseDamage;
 };
 
 Battle.prototype.defend = function (trainer) {

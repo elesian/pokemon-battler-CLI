@@ -1,4 +1,3 @@
-const { Console } = require("console");
 const {
   Pokemon,
   pokemonData,
