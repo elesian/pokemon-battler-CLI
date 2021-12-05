@@ -83,7 +83,7 @@ Battle.prototype.whoGoesFirst = function () {
     console.log(`${this.player1.name} is pre-emptive and attacks first!`);
   }
 };
-q
+
 //Used to determine which player goes first and whether critical hit
 Battle.prototype.numberRandomiser = function () {
   let randomNumber = Math.round(Math.random());
@@ -106,6 +106,7 @@ Battle.prototype.optionSelect = function (selection = 2) {
   return selection;
 };
 
+//TEST THIS FUNCTION
 Battle.prototype.attack = function (trainer1, trainer2) {
   currentPokemonTrainer1 = trainer1.pokemonInventory[trainer1.currentPokemon];
   currentPokemonTrainer2 = trainer2.pokemonInventory[trainer2.currentPokemon];

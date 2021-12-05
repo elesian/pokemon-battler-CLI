@@ -368,14 +368,13 @@ describe("Test suite for Battle", () => {
     trainer1.trainerInitialisation();
     trainer2.trainerInitialisation();
     testBattle = new Battle(trainer1, trainer2);
-
     //act
     spyWhoGoesFirst = jest.spyOn(testBattle, "whoGoesFirst");
     spyOptionSelect = jest.spyOn(testBattle, "optionSelect");
     spyNumberRandomiser = jest.spyOn(testBattle, "numberRandomiser");
     spyNumberRandomiser.mockReturnValue(true);
     spyOptionSelect.mockReturnValue(1);
-    trainer1.playerDefeated = true;
+		trainer2.playerDefeated=true;
     testBattle.gameLoop();
   });
 });
