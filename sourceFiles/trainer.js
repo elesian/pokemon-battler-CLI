@@ -1,11 +1,14 @@
-const { threadId } = require("worker_threads");
+/** @format */
+
 const {
   Pokemon,
   pokemonData,
   randomizePokemon,
-} = require("../sourceFiles/pokemon.js");
+} = require('../sourceFiles/pokemon.js');
 
-function Trainer(inputName = "Ash") {
+const { optionSelect } = require('./utilities');
+
+function Trainer(inputName = 'Ash') {
   this.name = inputName;
   this.pokemonInventory = [];
   this.pokemonInventoryMaxSize = 6;
@@ -25,53 +28,57 @@ Trainer.prototype.trainerInitialisation = function () {
   for (let i = 0; i < 6; i++) {
     this.pokemonInventory.push(this.randomizePokemon());
   }
-  console.log("Please select a starting Pokemon.");
+  console.log('Please select a starting Pokemon.');
   this.selectCurrentPokemon();
 };
 
 Trainer.prototype.pokemonInformation = function () {
-	console.log(this.pokemonInventory[0].name);
-	let printCurrentNames = `${this.name}'s inventory of Pokemon is: \n\n`;
+  let printCurrentNames = `\n${this.name}'s inventory of Pokemon is: \n\n`;
   for (let i = 0; i < this.pokemonInventory.length; i++) {
-    printCurrentNames += i + ". " + this.pokemonInventory[i].name + " " + "\n";
+    printCurrentNames += i + '. ' + this.pokemonInventory[i].name + ' ' + '\n';
   }
   console.log(printCurrentNames);
 };
 
-Trainer.prototype.selectCurrentPokemon = function (selection = 0) {
+Trainer.prototype.selectCurrentPokemon = function () {
   this.pokemonInformation();
   console.log(
-    "Please select the number of the Pokemon you wish to change to : "
+    '\nPlease select the number of the Pokemon you wish to change to : '
   );
+
+  let selection = optionSelect(null, 0, this.pokemonInventory.length - 1);
+
   //GET USER INPUT - ERROR CHECKING
-  console.log(`You have selected: ${selection}`);
+  console.log(`\nYou have selected: ${selection}`);
   //reset current pokemon
-  if (selection >= 0 && selection <= this.pokemonInventoryMaxSize) {
+  if (selection >= 0 && selection < this.pokemonInventoryMaxSize) {
     this.currentPokemon = selection;
     let currentPokemon = this.pokemonInventory[this.currentPokemon].name;
     console.log(
-      `Your current Pokemon is slot ${selection} : ${currentPokemon}`
+      `\nYour current Pokemon is slot ${selection} : ${currentPokemon}`
     );
     return true;
-  } else console.log("Invalid Selection.");
+  } else console.log('\nInvalid Selection.');
   return false;
 };
 
 //selection set to 0 for testing purposes
-Trainer.prototype.removePokemon = function (selection = 0) {
+Trainer.prototype.removePokemon = function () {
   if (this.pokemonInventory.length > 1) {
-    console.log("Before removal:");
+    console.log('\nBefore removal:');
     this.pokemonInformation();
-    console.log("Which Pokemon do you wish to remove?");
+    console.log('Which Pokemon do you wish to remove?');
+    let selection = optionSelect('', 0, this.pokemonInventory.length - 1);
+
     //GET USER INPUT - SELECTION - ERROR CHECKING
-    console.log(`You have selected ${selection}`);
+    console.log(`\nYou have selected ${selection}`);
     this.pokemonInventory.splice(selection, 1);
-    console.log("After removal:");
+    console.log('\nAfter removal:');
     this.pokemonInformation();
-    console.log("Pokemon Removed Successfully!!!");
+    console.log('\nPokemon Removed Successfully!!!');
     if (selection == this.currentPokemon) {
       console.log(
-        "You have removed your current Pokemon. Please select a new Pokemon."
+        '\nYou have removed your current Pokemon. Please select a new Pokemon.'
       );
       this.selectCurrentPokemon();
     }
@@ -80,36 +87,39 @@ Trainer.prototype.removePokemon = function (selection = 0) {
     }
 
     return true;
-  } else console.log("You must have at least one Pokemon.");
+  } else console.log('\nYou must have at least one Pokemon.');
   return false;
 };
 
 Trainer.prototype.catchPokemon = function () {
   if (this.pokemonInventory.length < this.pokemonInventoryMaxSize) {
     //randomize 80% chance of catching a Pokemon
+    inventoryFull = false;
     let catchProbability = Math.random();
     if (catchProbability <= 0.8) {
       this.pokemonInventory.push(this.randomizePokemon());
-      console.log("Pokemon caught successfully !!!");
+      console.log('\nPokemon caught successfully !!!');
       return true;
-    } else console.log("Pokemon escaped capture !!!");
+    } else console.log('\nPokemon escaped capture !!!');
+    return true;
+  } else {
+    console.log('\nInventory is full, please re-select another option!');
     return false;
-  } else console.log("Inventory Full. Unable to catch new Pokemon.");
-  return false;
+  }
 };
 
 //pokemonDefeated
 Trainer.prototype.pokemonDefeated = function () {
   console.log(
-    `${this.pokemonInventory[this.currentPokemon].name} is defeated !!!`
+    `\n${this.pokemonInventory[this.currentPokemon].name} is defeated !!!`
   );
   if (this.pokemonInventoryMaxSize > 1) {
     this.pokemonInventory.splice(this.currentPokemon, 1);
     this.pokemonInventoryMaxSize--;
     console.log(
-      `${this.name} now has one less inventory space. ${this.name} now has ${this.pokemonInventoryMaxSize} spaces.`
+      `\n${this.name} now has one less inventory space. ${this.name} now has ${this.pokemonInventoryMaxSize} spaces.`
     );
-    console.log("Please select a new Pokemon.");
+    console.log('\nPlease select a new Pokemon.');
     this.selectCurrentPokemon();
   } else this.playerDefeated = true;
 };

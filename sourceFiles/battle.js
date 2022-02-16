@@ -1,11 +1,14 @@
-const { CustomConsole } = require("@jest/console");
+/** @format */
+
 const {
   Pokemon,
   pokemonData,
   randomizePokemon,
-} = require("../sourceFiles/pokemon.js");
+} = require('../sourceFiles/pokemon.js');
 
-const { Trainer } = require("../sourceFiles/trainer.js");
+const { optionSelect } = require('./utilities');
+
+const { Trainer } = require('../sourceFiles/trainer.js');
 
 function Battle(trainer1, trainer2) {
   this.endGame = false;
@@ -26,21 +29,19 @@ Battle.prototype.gameLoop = function () {
       this.playerTurn(this.player2, this.player1);
     }
   }
-
-  console.log(`${this.winner} has defeated ${this.loser}`);
+  console.log(`\n${this.winner} has defeated ${this.loser}`);
   return true;
 };
 
 Battle.prototype.playerTurn = function (trainer1, trainer2) {
   //WILL BE CALLED BY GAMELOOP - NO NEED FOR THIS OUTSIDE OF UNIT TESTING
   //   "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
-  console.log(`It is now ${trainer1.name}'s turn !!!`);
-  console.log(
-    "Please select from the following options: \n\n 1. Attack \n 2. Defend \n 3. Change current Pokemon \n 4. Catch new Pokemon \n 5. Remove Pokemon"
-  );
-  //USER INPUT HERE
-  let selection = this.optionSelect();
-  console.log(`You have selected option ${selection}`);
+  console.log(`\nIt is now ${trainer1.name}'s turn !!!`);
+  let options =
+    '\nPlease select from the following options: \n\n 1. Attack \n 2. Defend \n 3. Change current Pokemon \n 4. Catch new Pokemon \n 5. Remove Pokemon \n';
+  let selection = optionSelect(options, 1, 5);
+  console.log(`\nYou have selected option ${selection}`);
+
   switch (selection) {
     case 1:
       this.attack(trainer1, trainer2);
@@ -81,12 +82,12 @@ Battle.prototype.playerTurn = function (trainer1, trainer2) {
 Battle.prototype.whoGoesFirst = function () {
   let firstPlayer = this.numberRandomiser();
   if (firstPlayer === false) {
-    console.log(`${this.player2.name} is pre-emptive and attacks first!`);
+    console.log(`\n${this.player2.name} is pre-emptive and attacks first!`);
     let temp = this.player2;
     this.player2 = this.player1;
     this.player1 = temp;
   } else {
-    console.log(`${this.player1.name} is pre-emptive and attacks first!`);
+    console.log(`\n${this.player1.name} is pre-emptive and attacks first!`);
   }
 };
 
@@ -95,21 +96,6 @@ Battle.prototype.numberRandomiser = function () {
   let randomNumber = Math.round(Math.random());
   if (randomNumber === 1) return true;
   else return false;
-};
-
-//selection variable for testing purposes; to be overriden with UI
-Battle.prototype.optionSelect = function (selection = 2) {
-  let invalidSelection = true;
-  while (invalidSelection) {
-    console.log(
-      "Please choose an action: \n\n 1. Attack \n 2. Defend \n 3. Switch Pokemon \n 4. Catch Pokemon \n 5. Remove Pokemon "
-    );
-    //USER INPUT - SELECTION = INPUT
-    if (selection >= 1 && selection <= 5) {
-      invalidSelection = false;
-    } else console.log("Invalid Input.");
-  }
-  return selection;
 };
 
 //TEST THIS FUNCTION
@@ -121,7 +107,7 @@ Battle.prototype.attack = function (trainer1, trainer2) {
     trainer2.pokemonDefeated();
   } else {
     console.log(
-      `${currentPokemonTrainer2.name}'s new HP is ${currentPokemonTrainer2.hitPoints}`
+      `\n${currentPokemonTrainer2.name}'s new HP is ${currentPokemonTrainer2.hitPoints}`
     );
   }
 };
@@ -136,26 +122,26 @@ Battle.prototype.damageCalculator = function (trainer1, trainer2) {
   //Announce who is attacking who with what move
   console.log(`${currentPokemonTrainer1.sound}`);
   console.log(
-    `${currentPokemonTrainer1.name} attacks ${currentPokemonTrainer2.name} with ${currentPokemonTrainer1.move}`
+    `\n${currentPokemonTrainer1.name} attacks ${currentPokemonTrainer2.name} with ${currentPokemonTrainer1.move}`
   );
 
   //calculate damage modifiers
   if (currentPokemonTrainer1.type === currentPokemonTrainer2.weakness) {
     console.log(
-      `${currentPokemonTrainer2.name} is weak against ${currentPokemonTrainer1.type}`
+      `\n${currentPokemonTrainer2.name} is weak against ${currentPokemonTrainer1.type}`
     );
-    console.log(`${currentPokemonTrainer1.move} is super effective !!!`);
+    console.log(`\n${currentPokemonTrainer1.move} is super effective !!!`);
     baseDamage *= 2;
   } else if (currentPokemonTrainer1.type === currentPokemonTrainer2.strength) {
     console.log(
-      `${currentPokemonTrainer2.name} is resistant against ${currentPokemonTrainer1.type}`
+      `\n${currentPokemonTrainer2.name} is resistant against ${currentPokemonTrainer1.type}`
     );
-    console.log(`${currentPokemonTrainer1.move} is not very effective ...`);
+    console.log(`\n${currentPokemonTrainer1.move} is not very effective ...`);
     baseDamage *= 0.5;
   }
   //factor in defending pokemons defense status
   if (trainer1.defendStatus === true) {
-    console.log(`${currentPokemonTrainer2.name} is defending !!! Damage reduced
+    console.log(`\n${currentPokemonTrainer2.name} is defending !!! Damage reduced
            by 50%`);
     baseDamage *= 0.5;
   }
@@ -163,24 +149,32 @@ Battle.prototype.damageCalculator = function (trainer1, trainer2) {
   //calculate critical hit
   let criticalHit = this.numberRandomiser();
   if (criticalHit == true) {
-    console.log(`${currentPokemonTrainer1.name} does a CRITICAL hit !!!`);
+    console.log(`\n${currentPokemonTrainer1.name} does a CRITICAL hit !!!`);
     baseDamage *= 2;
   }
   //return rounded final damage calculation
   baseDamage = Math.round(baseDamage);
   console.log(
-    `${currentPokemonTrainer1.name} hits ${currentPokemonTrainer2.name} for ${baseDamage}`
+    `\n${currentPokemonTrainer1.name} hits ${currentPokemonTrainer2.name} for ${baseDamage}`
   );
   return baseDamage;
 };
 
 Battle.prototype.defend = function (trainer) {
   console.log(
-    `Your current Pokemon ${
+    `\nYour current Pokemon ${
       trainer.pokemonInventory[trainer.currentPokemon].name
     } is now defending!`
   );
   trainer.defendStatus = true;
 };
+
+const trainer1 = new Trainer('Ash');
+const trainer2 = new Trainer('Brock');
+trainer1.trainerInitialisation();
+trainer2.trainerInitialisation();
+testBattle = new Battle(trainer1, trainer2);
+//act
+testBattle.gameLoop();
 
 module.exports = { Battle };

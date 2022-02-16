@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch"
+    "test": "jest ",
+    "start": "node ./sourceFiles/battle.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,10 @@
   "homepage": "https://github.com/elesian/fun-pokemon-battler#readme",
   "devDependencies": {
     "jest": "^27.4.3"
+  },
+  "dependencies": {
+    "inquirer": "^8.2.0",
+    "prompt-sync": "^4.2.0"
   }
+
 }
