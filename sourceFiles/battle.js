@@ -1,11 +1,5 @@
 /** @format */
 
-const {
-  Pokemon,
-  pokemonData,
-  randomizePokemon,
-} = require('../sourceFiles/pokemon.js');
-
 const { optionSelect } = require('./utilities');
 
 const { Trainer } = require('../sourceFiles/trainer.js');

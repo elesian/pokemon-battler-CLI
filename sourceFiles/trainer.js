@@ -3,7 +3,6 @@
 const {
   Pokemon,
   pokemonData,
-  randomizePokemon,
 } = require('../sourceFiles/pokemon.js');
 
 const { optionSelect } = require('./utilities');
