@@ -24,7 +24,9 @@ Battle.prototype.gameLoop = function () {
     }
   }
   console.log(`\n${this.winner} has defeated ${this.loser}`);
-  return true;
+  setTimeout(() => {
+    return true;
+  }, 5000);
 };
 
 Battle.prototype.playerTurn = function (trainer1, trainer2) {
