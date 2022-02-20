@@ -22,7 +22,6 @@
     "jest": "^27.4.3"
   },
   "dependencies": {
-    "inquirer": "^8.2.0",
     "pkg": "^5.5.2",
     "prompt-sync": "^4.2.0"
   }
