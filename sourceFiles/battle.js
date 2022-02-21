@@ -136,9 +136,8 @@ Battle.prototype.damageCalculator = function (trainer1, trainer2) {
     baseDamage *= 0.5;
   }
   //factor in defending pokemons defense status
-  if (trainer1.defendStatus === true) {
-    console.log(`\n${currentPokemonTrainer2.name} is defending !!! Damage reduced
-           by 50%`);
+  if (trainer2.defendStatus === true) {
+    console.log(`\n${currentPokemonTrainer2.name} is defending !!! Damage reduced by 50%`);
     baseDamage *= 0.5;
   }
 
